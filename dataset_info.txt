@@ -1,0 +1,51 @@
+The BraTS dataset consists of 3D MRI scans (volumes) and corresponding segmentation masks
+
+It includes MRI scans from patients, providing four different MRI modalities (means 4 channels of information - 4 different volumes of the same region) per patient:
+
+Native (T1)
+Post-contrast T1-weighted (T1ce - contrast enhanced)
+T2-weighted (T2)
+T2-FLAIR (T2 - Fluid Attenuated Inversion Recovery)
+
+Each patient has 4 MRI modalities (t1, t1ce, t2, flair) and a segmentation mask.
+
+
+Annotations (labels):
+
+Label 0: Not Tumor (NT) volume
+Label 1: Necrotic and non-enhancing tumor core (NCR/NET)
+Label 2: edema (ED)
+Label 3: Missing (No pixels in all the volumes contain label 3)
+Label 4: GD-enhancing tumor (ET)
+
+As there are no pixels with the label 3, we will be replacing label 3 with label 4 so that there is continuity between the labels.
+
+
+Training set: 369 patients
+Validation set: 125 patients
+Test set: 254 patients
+
+
+240 x 240 pixels in the xy-plane (2D slice of the MRI).
+155 slices in the z-axis (the 3D volume along the brain's depth).
+
+Converting to 2D:
+Each slice along the axial plane of the 3D image is extracted and saved as a separate 2D image.
+In your code, this is done inside the loop for slice_idx in range(multi_channel_data.shape[2]), where you're iterating through the depth (i.e., the number of slices) of the 3D image.
+Each slice_idx corresponds to a 2D slice from the 3D volume.
+For example:
+
+If your 3D image has a shape of (240, 240, 155), you extract the 155 slices and treat them as 2D images.
+These 2D slices will have the shape (240, 240, 4) (where 4 corresponds to the 4 modalities stacked as channels).
+
+
+What is stored in BraTS20_Training_002_images.npy?
+BraTS20_Training_002_images.npy will store all the 2D slices for the patient BraTS20_Training_002, each slice having 4 channels (corresponding to the 4 modalities: FLAIR, T1, T1c, T2).
+The shape of BraTS20_Training_002_images.npy will be (num_slices, Height, Width, 4).
+num_slices corresponds to the number of slices (e.g., 155 slices).
+Height and Width are 240 each.
+4 corresponds to the 4 modalities stacked together.
+So, the data in BraTS20_Training_002_images.npy will look like this:
+
+A list of num_slices 3D images of shape (240, 240, 4).
+In other words, each slice is a 2D image where the channels correspond to the 4 different modalities.
